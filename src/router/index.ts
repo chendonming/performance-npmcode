@@ -5,6 +5,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import("../template/html.vue"),
     path: "/",
     children: [
+      // 普通HTML模板
       {
         component: () => import('../views/WorkerPool.vue'),
         path: 'workpool'
@@ -15,10 +16,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../template/three.vue'),
     path: '/three',
     children: [
-      {
-        component: () => import('../views/test.vue'),
-        path: 'test'
-      }
+      // THREEJS模板
     ]
   }
 ]
