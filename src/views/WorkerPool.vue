@@ -24,6 +24,9 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 对npm库 workerpool的测试
+ */
 import { ref } from "vue";
 import workerpool from "workerpool";
 const pool = workerpool.pool();
