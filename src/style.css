@@ -10,10 +10,6 @@ body,
   height: 100vh;
 }
 
-#app {
-  padding: 10px;
-}
-
 .flex {
   display: flex;
 }

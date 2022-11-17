@@ -1,7 +1,7 @@
 <template>
   <!-- THREEJS模板 -->
   <div class="WebGl" ref="webgl" id="webgl"></div>
-  <RouterView :scene="scene" :renderer="renderer" :camera="camera" />
+  <RouterView :scene="scene" v-if="camera" :renderer="renderer" :camera="camera" />
 </template>
 
 <script setup lang="ts">

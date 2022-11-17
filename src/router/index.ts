@@ -17,6 +17,10 @@ const routes: RouteRecordRaw[] = [
     path: '/three',
     children: [
       // THREEJS模板
+      {
+        component: () => import('../views/CameraAnimation.vue'),
+        path: 'CameraAnimation'
+      }
     ]
   }
 ]

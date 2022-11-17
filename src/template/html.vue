@@ -1,6 +1,8 @@
 <template>
   <!-- HTML基础模板 -->
-  <RouterView />
+  <div style="padding: 10px;">
+    <RouterView />
+  </div>
 </template>
 
 <script setup lang="ts">
