@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@tweenjs/tween.js': ^18.6.4
   '@types/three': ^0.146.0
   '@types/workerpool': ^6.1.0
   '@vitejs/plugin-vue': ^3.2.0
@@ -13,6 +14,7 @@ specifiers:
   workerpool: ^6.3.1
 
 dependencies:
+  '@tweenjs/tween.js': 18.6.4
   three: 0.146.0
   vue: 3.2.44
   vue-router: 4.1.6_vue@3.2.44
@@ -68,6 +70,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@tweenjs/tween.js/18.6.4:
+    resolution: {integrity: sha512-lB9lMjuqjtuJrx7/kOkqQBtllspPIN+96OvTCeJ2j5FEzinoAXTdAMFnDAQT1KVPRlnYfBrqxtqP66vDM40xxQ==}
+    dev: false
 
   /@types/node/18.11.9:
     resolution: {integrity: sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==}
