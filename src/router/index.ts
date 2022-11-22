@@ -18,19 +18,19 @@ const routes: RouteRecordRaw[] = [
     children: [
       // THREEJS模板
       {
-        component: () => import('../views/CameraAnimation.vue'),
+        component: () => import('../views/three/CameraAnimation.vue'),
         path: 'CameraAnimation'
       },
       {
-        component: () => import('../views/BasicMatrix.vue'),
+        component: () => import('../views/three/BasicMatrix.vue'),
         path: 'BasicMatrix'
       },
       {
-        component: () => import('../views/DrillMatrix.vue'),
+        component: () => import('../views/three/DrillMatrix.vue'),
         path: 'DrillMatrix'
       },
       {
-        component: () => import('../views/PositionMatrix.vue'),
+        component: () => import('../views/three/PositionMatrix.vue'),
         path: 'PositionMatrix'
       }
     ]
