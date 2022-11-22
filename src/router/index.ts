@@ -20,6 +20,18 @@ const routes: RouteRecordRaw[] = [
       {
         component: () => import('../views/CameraAnimation.vue'),
         path: 'CameraAnimation'
+      },
+      {
+        component: () => import('../views/BasicMatrix.vue'),
+        path: 'BasicMatrix'
+      },
+      {
+        component: () => import('../views/DrillMatrix.vue'),
+        path: 'DrillMatrix'
+      },
+      {
+        component: () => import('../views/PositionMatrix.vue'),
+        path: 'PositionMatrix'
       }
     ]
   }

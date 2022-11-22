@@ -1,7 +1,13 @@
 <template>
   <!-- THREEJS模板 -->
   <div class="WebGl" ref="webgl" id="webgl"></div>
-  <RouterView v-if="camera && scene && renderer"  :scene="scene" :renderer="renderer" :camera="camera" />
+  <RouterView
+    v-if="camera && scene && renderer"
+    :scene="scene"
+    :renderer="renderer"
+    :camera="camera"
+    :controls="controls"
+  />
 </template>
 
 <script setup lang="ts">
@@ -17,6 +23,7 @@ const renderer = new THREE.WebGLRenderer({
   alpha: true,
 });
 let camera: Ref<THREE.PerspectiveCamera | undefined> = ref();
+let controls = ref();
 
 onMounted(() => {
   scene.background = new THREE.Color("#fff");
@@ -35,9 +42,9 @@ onMounted(() => {
   scene.add(point);
 
   // 添加相机控制
-  const controls = new OrbitControls(camera.value, renderer.domElement);
+  controls.value = new OrbitControls(camera.value, renderer.domElement);
   camera.value.position.set(1, 2, 3);
-  controls.update();
+  controls.value.update();
 
   const size = 20;
   const divisions = 20;
