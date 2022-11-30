@@ -32,6 +32,11 @@ onMounted(() => {
   const height = dom.clientHeight;
   camera.value = new THREE.PerspectiveCamera(75, width / height, 0.01, 1000);
 
+  //@ts-ignore
+  window.camera = camera.value
+  //@ts-ignore
+  window.scene = scene
+
   renderer.localClippingEnabled = true;
   renderer.setSize(width, height);
   dom.appendChild(renderer.domElement);

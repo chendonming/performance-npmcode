@@ -32,6 +32,18 @@ const routes: RouteRecordRaw[] = [
       {
         component: () => import('../views/three/PositionMatrix.vue'),
         path: 'PositionMatrix'
+      },
+      {
+        component: () => import('../views/three/SnowEffect.vue'),
+        path: 'SnowEffect'
+      },
+      {
+        component: () => import('../views/three/ZoomObject.vue'),
+        path: 'ZoomObject'
+      },
+      {
+        component: () => import('../views/three/Plane.vue'),
+        path: 'Plane'
       }
     ]
   }
