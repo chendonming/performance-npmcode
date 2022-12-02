@@ -44,6 +44,10 @@ const routes: RouteRecordRaw[] = [
       {
         component: () => import('../views/three/Plane.vue'),
         path: 'Plane'
+      },
+      {
+        component: () => import('../views/three/CustomTranslateControl.vue'),
+        path: 'CustomTranslateControl'
       }
     ]
   }
