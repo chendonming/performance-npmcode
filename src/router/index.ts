@@ -48,6 +48,14 @@ const routes: RouteRecordRaw[] = [
       {
         component: () => import('../views/three/CustomTranslateControl.vue'),
         path: 'CustomTranslateControl'
+      },
+      {
+        component: () => import('../views/three/GLTFView.vue'),
+        path: 'GLTFView'
+      },
+      {
+        component: () => import('../views/three/SphericalCamera.vue'),
+        path: 'SphericalCamera'
       }
     ]
   }
