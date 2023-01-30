@@ -56,6 +56,22 @@ const routes: RouteRecordRaw[] = [
       {
         component: () => import('../views/three/SphericalCamera.vue'),
         path: 'SphericalCamera'
+      },
+      {
+        component: () => import('../views/three/InstanceCliping.vue'),
+        path: 'InstanceCliping'
+      },
+      {
+        component: () => import('../views/three/CameraFov.vue'),
+        path: 'CameraFov'
+      },
+      {
+        component: () => import('../views/three/Euler.vue'),
+        path: 'Euler'
+      },
+      {
+        component: () => import('../views/three/PbrLight.vue'),
+        path: 'PbrLight'
       }
     ]
   }
