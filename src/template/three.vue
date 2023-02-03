@@ -58,8 +58,8 @@ onMounted(() => {
   // scene.add(gridHelper);
 
   // 添加辅助线测试
-  const axesHelper = new THREE.AxesHelper(250);
-  scene.add(axesHelper);
+  // const axesHelper = new THREE.AxesHelper(250);
+  // scene.add(axesHelper);
 
   // group.rotateX(Math.PI / 2);
   // group.rotateZ(Math.PI / 2);
