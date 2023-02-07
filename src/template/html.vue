@@ -1,6 +1,6 @@
 <template>
   <!-- HTML基础模板 -->
-  <div style="padding: 10px;width: 100%;height: 100%">
+  <div style="width: 100%;height: 100%">
     <RouterView />
   </div>
 </template>

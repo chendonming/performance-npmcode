@@ -16,12 +16,12 @@ export function createADepthMap(renderer: THREE.WebGLRenderer, scene: THREE.Scen
     target.depthTexture = new THREE.DepthTexture(width, height)
 
     camera.setViewOffset(
-        renderer.domElement.width,
-        renderer.domElement.height,
+        width,
+        height,
         0,
         0,
-        renderer.domElement.width,
-        renderer.domElement.height
+        width,
+        height
     );
 
     renderer.setRenderTarget(target);
