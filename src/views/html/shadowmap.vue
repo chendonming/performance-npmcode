@@ -12,16 +12,16 @@ import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 
 onMounted(() => {
   let renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    controls: OrbitControls,
-    light: THREE.DirectionalLight,
-    frustumSize: number = 10,
-    shadowMapSize,
-    material: THREE.ShaderMaterial,
-    shadowMaterial: THREE.ShaderMaterial,
-    /*language=glsl*/
-    vertexShader = `
+      scene: THREE.Scene,
+      camera: THREE.PerspectiveCamera,
+      controls: OrbitControls,
+      light: THREE.DirectionalLight,
+      frustumSize: number = 10,
+      shadowMapSize,
+      material: THREE.ShaderMaterial,
+      shadowMaterial: THREE.ShaderMaterial,
+      /*language=glsl*/
+      vertexShader = `
         varying vec3 vNormal;
 
         uniform mat4 uProjectionMatrix;
@@ -36,14 +36,18 @@ onMounted(() => {
           vShadowCoord = uProjectionMatrix * uViewMatrix * modelMatrix * vec4(pos, 1.0);
         }
       `,
-    /*language=glsl*/
-    fragmentShader = `
+      /*language=glsl*/
+      fragmentShader = `
         #include <packing>
         uniform sampler2D uDepthMap;
         varying vec4 vShadowCoord;
         varying vec3 vNormal;
         uniform vec3 uLightDir;
         uniform vec3 uColor;
+
+        uniform bool uUsePCF;
+        uniform int uPCFRegion;
+        uniform float uPCFRadius;
 
         float frustumTest(vec3 shadowCoord, float shadowFactor) {
           bvec4 inFrustumVec = bvec4(shadowCoord.x >= 0., shadowCoord.x <= 1., shadowCoord.y >= 0., shadowCoord.y <= 1.);
@@ -52,19 +56,35 @@ onMounted(() => {
           bvec2 frustumTestVec = bvec2(inFrustum, shadowCoord.z <= 1.);
           bool frustumTest = all(frustumTestVec);
 
-          if(frustumTest == false) {
-              shadowFactor = 1.;
+          if (frustumTest == false) {
+            shadowFactor = 1.;
           }
 
           return shadowFactor;
+        }
+
+        float calcPCF(vec3 projCoords, float bias) {
+          float shadowFactor = 0.;
+          float currentDepth = projCoords.z;
+
+          vec2 texelSize = 1. / vec2(textureSize(uDepthMap, 0));
+
+          for (int x = -uPCFRegion; x <= uPCFRegion; x++) {
+            for (int y = -uPCFRegion; y <= uPCFRegion; y++) {
+              float shadowMapDepth = unpackRGBAToDepth(texture(uDepthMap, projCoords.xy + uPCFRadius * vec2(x, y) * texelSize));
+              shadowFactor += step(currentDepth - bias, shadowMapDepth);
+            }
+          }
+
+          int total = 2*uPCFRegion+1;
+          return shadowFactor/float(total*total);
         }
 
         void main() {
           vec3 projCoords = vShadowCoord.xyz / vShadowCoord.w;
           projCoords = projCoords * 0.5 + 0.5;
 
-          float depth = unpackRGBAToDepth(texture(uDepthMap, projCoords.xy));
-          float currentDepth = projCoords.z;
+          float shadow = 0.0;
 
           float cosTheta = dot(normalize(-uLightDir), vNormal);
 
@@ -73,30 +93,38 @@ onMounted(() => {
           float bias = 0.005 * tan(acos(cosTheta));
           bias = clamp(bias, 0.0, 0.0001);
 
-          float shadowFactor = step(currentDepth - bias, depth);
-          shadowFactor = frustumTest(projCoords, shadowFactor);
+          float shadowFactor = 0.;
+
+          if (uUsePCF == true) {
+            shadowFactor = calcPCF(projCoords, bias);
+          } else {
+            float depth = unpackRGBAToDepth(texture(uDepthMap, projCoords.xy));
+            float currentDepth = projCoords.z;
+            shadowFactor = step(currentDepth - bias, depth);
+            shadowFactor = frustumTest(projCoords, shadowFactor);
+          }
 
           float shading = shadowFactor * difLight;
 
-          vec3 color = vec3(0.0);
+          vec3 color = vec3(0.);
 
-          color = mix(uColor - 0.1, uColor + 0.1, shading);
+          color = mix(uColor - .1, uColor + .1, shading);
           // color = uColor * shading;
 
           gl_FragColor = vec4(color, 1.);
         }
       `,
-    /*language=glsl*/
-    shadowShader = `
+      /*language=glsl*/
+      shadowShader = `
         #include <packing>
 
         void main(){
           gl_FragColor = packDepthToRGBA(gl_FragCoord.z);
         }
       `,
-    meshes: THREE.Mesh<THREE.BufferGeometry, any>[] = [],
-    postCamera: THREE.OrthographicCamera,
-    helpers: THREE.Object3D[] = [];
+      meshes: THREE.Mesh<THREE.BufferGeometry, any>[] = [],
+      postCamera: THREE.OrthographicCamera,
+      helpers: THREE.Object3D[] = [];
 
   initWebGl();
 
@@ -107,7 +135,7 @@ onMounted(() => {
   animate();
 
   function initWebGl() {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({antialias: true});
     scene = new THREE.Scene();
     // @ts-ignore
     window.scene = scene;
@@ -127,25 +155,25 @@ onMounted(() => {
 
     // 使用RGBA通道
     light.shadow.map = new THREE.WebGLRenderTarget(
-      shadowMapSize,
-      shadowMapSize,
-      {
-        minFilter: THREE.NearestFilter,
-        magFilter: THREE.NearestFilter,
-        format: THREE.RGBAFormat,
-      }
+        shadowMapSize,
+        shadowMapSize,
+        {
+          minFilter: THREE.LinearFilter,
+          magFilter: THREE.LinearFilter,
+          format: THREE.RGBAFormat,
+        }
     );
 
     light.shadow.mapSize.x = shadowMapSize;
     light.shadow.mapSize.y = shadowMapSize;
 
     postCamera = light.shadow.camera = new THREE.OrthographicCamera(
-      -frustumSize / 2,
-      frustumSize / 2,
-      -frustumSize / 2,
-      frustumSize / 2,
-      0.1,
-      20
+        -frustumSize / 2,
+        frustumSize / 2,
+        -frustumSize / 2,
+        frustumSize / 2,
+        0.1,
+        20
     );
 
     postCamera.position.copy(light.position.clone());
@@ -155,6 +183,10 @@ onMounted(() => {
     scene.add(postCamera);
     scene.add(cameraHelper);
     helpers.push(cameraHelper);
+
+    const axesHelper = new THREE.AxesHelper(20);
+    scene.add(axesHelper);
+    helpers.push(axesHelper);
 
     const container = document.getElementById("container");
     if (container) {
@@ -168,6 +200,8 @@ onMounted(() => {
   function createScene() {
     const planeGeometry = new THREE.PlaneGeometry(10, 10);
     const m1 = new THREE.Mesh(planeGeometry, material);
+    m1.rotateX(-Math.PI / 2);
+    m1.position.y = -1;
     scene.add(m1);
 
     const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -186,7 +220,20 @@ onMounted(() => {
     m4.scale.set(0.05, 0.05, 0.05);
     scene.add(m4);
 
-    meshes.push(m1, m2, m3, m4);
+    const box = new THREE.BoxGeometry(0.25, 10, 0.25);
+    const b1 = new THREE.Mesh(box, material);
+    b1.position.set(-1, 0, 1);
+    scene.add(b1);
+
+    const b2 = new THREE.Mesh(box, material);
+    b2.position.set(-1.5, 0, 1);
+    scene.add(b2);
+
+    const b3 = new THREE.Mesh(box, material);
+    b3.position.set(-2, 0, 1);
+    scene.add(b3);
+
+    meshes.push(m1, m2, m3, m4, b1, b2, b3);
   }
 
   function createMaterial() {
@@ -206,6 +253,15 @@ onMounted(() => {
       uColor: {
         value: new THREE.Color(0xfaf3f3),
       },
+      uUsePCF: {
+        value: false,
+      },
+      uPCFRegion: {
+        value: 1
+      },
+      uPCFRadius: {
+        value: 1.0
+      }
     };
 
     material = new ShaderMaterial({
@@ -258,7 +314,11 @@ onMounted(() => {
       cameraPosY: light.position.y,
       cameraPosZ: light.position.z,
       cameraHelper: true,
+      userPCF: false,
+      pcfRegion: 1,
+      pcfRadius: 1
     };
+
     function changeCameraPos(s: "x" | "y" | "z", v: number) {
       light.position[s] = v;
       light.updateMatrixWorld();
@@ -266,6 +326,7 @@ onMounted(() => {
       postCamera.lookAt(scene.position);
       getDepthTexture();
     }
+
     gui.add(obj, "cameraPosX", -10, 10).onChange((v: number) => {
       changeCameraPos("x", v);
     });
@@ -279,6 +340,15 @@ onMounted(() => {
       helpers.forEach((m) => {
         m.visible = v;
       });
+    });
+    gui.add(obj, "userPCF").onChange((v: boolean) => {
+      material.uniforms.uUsePCF.value = v;
+    });
+    gui.add(obj, "pcfRegion", 1, 10, 1).onChange((v: number) => {
+      material.uniforms.uPCFRegion.value = v;
+    });
+    gui.add(obj, "pcfRadius", 1, 3).onChange((v: number) => {
+      material.uniforms.uPCFRadius.value = v;
     });
   }
 });

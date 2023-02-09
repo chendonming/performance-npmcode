@@ -84,6 +84,10 @@ const routes: RouteRecordRaw[] = [
             {
                 component: () => import('../views/three/DepthTexture.vue'),
                 path: 'DepthTexture'
+            },
+            {
+                component: () => import('../views/three/Texture2.vue'),
+                path: 'Texture2'
             }
         ]
     }
