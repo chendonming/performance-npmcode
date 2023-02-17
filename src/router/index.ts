@@ -1,4 +1,4 @@
-import {RouteRecordRaw, createRouter, createWebHashHistory} from 'vue-router'
+import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -13,6 +13,14 @@ const routes: RouteRecordRaw[] = [
             {
                 component: () => import('../views/html/shadowmap.vue'),
                 path: 'shadowmap'
+            },
+            {
+                component: () => import('../views/html/deferredShading.vue'),
+                path: 'deferredShading'
+            },
+            {
+                component: () => import('../views/html/ssao.vue'),
+                path: 'ssao'
             }
         ]
     },
@@ -98,4 +106,4 @@ const router = createRouter({
     routes,
 })
 
-export {router}
+export { router }
