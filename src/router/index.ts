@@ -96,6 +96,10 @@ const routes: RouteRecordRaw[] = [
             {
                 component: () => import('../views/three/Texture2.vue'),
                 path: 'Texture2'
+            },
+            {
+                component: () => import('../views/three/LineMesh.vue'),
+                path: 'LineMesh'
             }
         ]
     }
