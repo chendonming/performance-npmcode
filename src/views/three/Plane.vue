@@ -21,7 +21,7 @@ const { scene, renderer, camera, controls } = props;
 camera?.position.set(6.276599944444732, 9.99093887682438, 15.293090013790483)
 controls?.update()
 
-const grid = new THREE.GridHelper(40, 40)
+const grid = new THREE.AxesHelper(40)
 scene?.add(grid)
 
 basic2()
@@ -32,7 +32,7 @@ basic2()
 function basic() {
   const normal = new THREE.Vector3(1, 0, 0)
 
-  let constant = 1;
+  let constant = -1;
   const p = new THREE.Plane(normal, constant);
 
   const h = new THREE.PlaneHelper(p, 10, 0xff0000)
@@ -67,7 +67,7 @@ function basic2() {
       normaly: normal.y,
       normalz: normal.z
     }
-    let constant = 1;
+    let constant = 10;
     const p = new THREE.Plane(normal.normalize(), constant);
     const h = new THREE.PlaneHelper(p, 10, 0xff0000)
     scene?.add(h)

@@ -100,6 +100,14 @@ const routes: RouteRecordRaw[] = [
             {
                 component: () => import('../views/three/LineMesh.vue'),
                 path: 'LineMesh'
+            },
+            {
+                component: () => import('../views/three/GPUNormal.vue'),
+                path: 'GPUNormal'
+            },
+            {
+                component: () => import('../views/three/Noise.vue'),
+                path: 'Noise'
             }
         ]
     }
