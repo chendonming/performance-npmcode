@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tweenjs/tween.js": "^18.6.4",
+    "axios": "^1.4.0",
     "three": "^0.146.0",
     "vue": "^3.2.41",
     "vue-router": "4",

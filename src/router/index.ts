@@ -21,6 +21,10 @@ const routes: RouteRecordRaw[] = [
             {
                 component: () => import('../views/html/ssao.vue'),
                 path: 'ssao'
+            },
+            {
+                component: () => import('../views/html/newtree.vue'),
+                path: 'newtree'
             }
         ]
     },
@@ -108,6 +112,10 @@ const routes: RouteRecordRaw[] = [
             {
                 component: () => import('../views/three/Noise.vue'),
                 path: 'Noise'
+            },
+            {
+                component: () => import('../views/three/fbx.vue'),
+                path: 'fbx'
             }
         ]
     }
